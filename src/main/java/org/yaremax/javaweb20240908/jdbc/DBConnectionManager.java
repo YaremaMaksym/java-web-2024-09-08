@@ -25,6 +25,15 @@ public class DBConnectionManager {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+        /*
+        TRANSACTION_READ_UNCOMMITTED
+        TRANSACTION_READ_COMMITTED
+        TRANSACTION_REPEATABLE_READ
+        TRANSACTION_SERIALIZABLE
+
+        To change isolation
+        connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+         */
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }
