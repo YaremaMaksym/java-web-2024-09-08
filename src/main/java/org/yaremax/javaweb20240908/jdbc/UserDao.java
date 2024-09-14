@@ -1,6 +1,8 @@
 package org.yaremax.javaweb20240908.jdbc;
 
 import org.yaremax.javaweb20240908.entity.User;
+import org.yaremax.javaweb20240908.jdbc.strategy.ReadCommittedStrategy;
+import org.yaremax.javaweb20240908.jdbc.strategy.RepeatableReadStrategy;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ public class UserDao {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users";
 
-        try (Connection connection = dbConnectionManager.openConnection()) {
+        try (Connection connection = dbConnectionManager.openConnection(new ReadCommittedStrategy())) {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
@@ -50,7 +52,7 @@ public class UserDao {
     public Optional<User> getUserById(Long id) {
         String sql = "SELECT * FROM users WHERE id = ?";
 
-        try (Connection connection = dbConnectionManager.openConnection()) {
+        try (Connection connection = dbConnectionManager.openConnection(new ReadCommittedStrategy())) {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, id);
 
@@ -73,7 +75,7 @@ public class UserDao {
     public User createUser(User user) {
         String sql = "INSERT INTO users (first_name, last_name, age) VALUES (?, ?, ?)";
 
-        try (Connection connection = dbConnectionManager.openConnection();
+        try (Connection connection = dbConnectionManager.openConnection(new ReadCommittedStrategy());
              PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, user.getFirstName());
@@ -101,7 +103,7 @@ public class UserDao {
     public Optional<User> updateUser(User user, Long id) {
         String sql = "UPDATE users SET first_name = ?, last_name = ?, age = ? WHERE id = ?";
 
-        try (Connection connection = dbConnectionManager.openConnection();
+        try (Connection connection = dbConnectionManager.openConnection(new RepeatableReadStrategy());
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, user.getFirstName());
@@ -124,7 +126,7 @@ public class UserDao {
     public boolean deleteUser(Long id) {
         String sql = "DELETE FROM users WHERE id = ?";
 
-        try (Connection connection = dbConnectionManager.openConnection();
+        try (Connection connection = dbConnectionManager.openConnection(new RepeatableReadStrategy());
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setLong(1, id);

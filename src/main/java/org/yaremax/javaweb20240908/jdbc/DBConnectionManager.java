@@ -1,6 +1,6 @@
 package org.yaremax.javaweb20240908.jdbc;
 
-import jakarta.persistence.EntityManager;
+import org.yaremax.javaweb20240908.jdbc.strategy.IsolationLevelStrategy;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -27,15 +27,25 @@ public class DBConnectionManager {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        /*
-        TRANSACTION_READ_UNCOMMITTED
-        TRANSACTION_READ_COMMITTED
-        TRANSACTION_REPEATABLE_READ
-        TRANSACTION_SERIALIZABLE
 
-        To change isolation
-        connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
-         */
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
+
+    public Connection openConnection(IsolationLevelStrategy isolationLevelStrategy) throws SQLException {
+        /*
+            Connection connection = openConnection();
+            isolationLevelStrategy.setTransactionIsolation(connection);
+            return connection;
+         */
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        isolationLevelStrategy.setTransactionIsolation(connection);
+        return connection;
+    }
+
 }
