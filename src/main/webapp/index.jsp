@@ -7,7 +7,7 @@
     </head>
     <body>
         <p>Hello</p>
-        <form action="usersPage.jsp" method="get">
+        <form action="user-management.jsp" method="get">
             <input type="submit" value="Go to Users Page"/>
         </form>
     </body>
