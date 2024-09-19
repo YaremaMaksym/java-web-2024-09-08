@@ -8,7 +8,10 @@
     <body>
         <p>Hello</p>
         <form action="user-management.jsp" method="get">
-            <input type="submit" value="Go to Users Page"/>
+            <input type="submit" value="Go to User management Page"/>
+        </form>
+        <form action="activity-management.jsp" method="get">
+            <input type="submit" value="Go to Activity management Page"/>
         </form>
     </body>
 </html>
